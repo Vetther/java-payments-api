@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 public class PaypalOrder {
@@ -20,6 +19,10 @@ public class PaypalOrder {
 
     public LinkDescription getUrl() {
         return this.links.get(1);
+    }
+
+    public boolean isPaid() {
+        return status.equalsIgnoreCase("APPROVED") || status.equalsIgnoreCase("COMPLETED");
     }
 
     @AllArgsConstructor
