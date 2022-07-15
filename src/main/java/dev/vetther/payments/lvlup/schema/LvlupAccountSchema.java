@@ -1,15 +1,20 @@
 package dev.vetther.payments.lvlup.schema;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor @NoArgsConstructor
 public class LvlupAccountSchema {
 
-    @Getter private String apiKey;
-    @Getter private String email;
-    @Getter private String password;
-    @Getter private String username;
-    @Getter private int id;
+    @Getter private final String apiKey;
+    @Getter private final String email;
+    @Getter private final String password;
+    @Getter private final String username;
+    @Getter private final int id;
+
+    private LvlupAccountSchema(String apiKey, String email, String password, String username, int id) {
+        this.apiKey = apiKey;
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.id = id;
+    }
 }

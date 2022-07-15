@@ -53,7 +53,7 @@ public class LvlupApi {
     }
 
     /**
-     * Returns information about sandbox/real payment
+     * Return information about sandbox/real payment
      * @param paymentId payment id
      * @throws IOException if an I/O error occurs when sending or receiving http request
      * @throws InterruptedException if the operation is interrupted
