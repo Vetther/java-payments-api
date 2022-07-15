@@ -14,6 +14,7 @@ build/
 *.ipr
 out/
 !**/src/main/**/out/
+!**/src/main/java/dev/vetther/payments/TestRequest.java
 !**/src/test/**/out/
 
 ### Eclipse ###
