@@ -1,10 +1,11 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'maven-publish'
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 group 'dev.vetther'
-version '1.0-SNAPSHOT'
+version '1.0.0'
 
 repositories {
     mavenCentral()
@@ -13,12 +14,31 @@ repositories {
 
 dependencies {
     implementation 'org.json:json:20220320'
-    //implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
     implementation 'com.google.code.gson:gson:2.8.9'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId 'java-payments-api'
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+        maven {
+            name = 'eternalcode-repository'
+            url = 'https://repo.eternalcode.pl/releases'
+            credentials {
+                username = property("user")
+                password = property("pass")
+            }
+        }
+    }
 }
 
 test {
