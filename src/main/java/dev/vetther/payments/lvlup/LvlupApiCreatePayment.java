@@ -1,6 +1,6 @@
 package dev.vetther.payments.lvlup;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.GsonBuilder;
 import dev.vetther.payments.Response;
 import dev.vetther.payments.lvlup.schema.LvlupPaymentSchema;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class LvlupApiCreatePayment extends Response {
     private final static String URL = "https://api.lvlup.pro/v4/wallet/up";
     private final static String SANDBOX_URL = "https://api.sandbox.lvlup.pro/v4/wallet/up";
 
-    @Getter private final LvlupPaymentSchema body;
+    @Getter private final LvlupPaymentSchema payment;
 
     LvlupApiCreatePayment(
             double amount,
@@ -43,10 +43,10 @@ public class LvlupApiCreatePayment extends Response {
 
         JSONObject jsonObject = new JSONObject(httpResponse.body());
 
-        LvlupPaymentSchema paymentSchema = new ObjectMapper().readValue(jsonObject.toString(), LvlupPaymentSchema.class);
+        LvlupPaymentSchema paymentSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), LvlupPaymentSchema.class);
 
         this.setStatusCode(httpResponse.statusCode());
         this.setHeaders(httpResponse.headers());
-        this.body = paymentSchema;
+        this.payment = paymentSchema;
     }
 }

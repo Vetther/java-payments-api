@@ -1,6 +1,6 @@
 package dev.vetther.payments.lvlup;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.GsonBuilder;
 import dev.vetther.payments.Response;
 import dev.vetther.payments.lvlup.schema.LvlupAccountSchema;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 public class LvlupApiCreateAccount extends Response {
 
     private final static String URL = "https://api.sandbox.lvlup.pro/v4/sandbox/account/new";
-    @Getter private final LvlupAccountSchema body;
+    @Getter private final LvlupAccountSchema account;
 
     LvlupApiCreateAccount() throws IOException, InterruptedException {
 
@@ -28,10 +28,10 @@ public class LvlupApiCreateAccount extends Response {
 
         JSONObject jsonObject = new JSONObject(httpResponse.body());
 
-        LvlupAccountSchema accountSchema = new ObjectMapper().readValue(jsonObject.toString(), LvlupAccountSchema.class);
+        LvlupAccountSchema accountSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), LvlupAccountSchema.class);
 
         this.setStatusCode(httpResponse.statusCode());
         this.setHeaders(httpResponse.headers());
-        this.body = accountSchema;
+        this.account = accountSchema;
     }
 }
