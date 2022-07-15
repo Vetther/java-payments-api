@@ -2,6 +2,9 @@ package dev.vetther.payments.lvlup;
 
 import java.io.IOException;
 
+/**
+ * <b>API for Lvlup REST API version v4</b>
+ */
 public class LvlupApi {
 
     private final String apiKey;

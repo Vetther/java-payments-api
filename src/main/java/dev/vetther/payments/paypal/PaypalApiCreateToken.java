@@ -2,8 +2,7 @@ package dev.vetther.payments.paypal;
 
 import com.google.gson.GsonBuilder;
 import dev.vetther.payments.Response;
-import dev.vetther.payments.lvlup.schema.LvlupPaymentInfoSchema;
-import dev.vetther.payments.paypal.schema.PaypalAccessToken;
+import dev.vetther.payments.paypal.schema.PaypalAccessTokenSchema;
 import dev.vetther.payments.util.FormUtils;
 import lombok.Getter;
 import org.json.JSONObject;
@@ -21,7 +20,7 @@ public class PaypalApiCreateToken extends Response {
     private final static String URL = "https://api-m.paypal.com/v1/oauth2/token";
     private final static String SANDBOX_URL = "https://api-m.sandbox.paypal.com/v1/oauth2/token";
 
-    @Getter private final PaypalAccessToken token;
+    @Getter private final PaypalAccessTokenSchema token;
 
     PaypalApiCreateToken(String clientId, String clientSecret, boolean sandbox) throws IOException, InterruptedException {
 
@@ -42,7 +41,7 @@ public class PaypalApiCreateToken extends Response {
 
         JSONObject jsonObject = new JSONObject(httpResponse.body());
 
-        PaypalAccessToken tokenSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaypalAccessToken.class);
+        PaypalAccessTokenSchema tokenSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaypalAccessTokenSchema.class);
 
         this.setStatusCode(httpResponse.statusCode());
         this.setHeaders(httpResponse.headers());

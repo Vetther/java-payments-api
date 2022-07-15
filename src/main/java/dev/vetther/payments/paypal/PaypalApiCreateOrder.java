@@ -2,8 +2,7 @@ package dev.vetther.payments.paypal;
 
 import com.google.gson.GsonBuilder;
 import dev.vetther.payments.Response;
-import dev.vetther.payments.paypal.schema.PaypalAccessToken;
-import dev.vetther.payments.paypal.schema.PaypalOrder;
+import dev.vetther.payments.paypal.schema.PaypalOrderSchema;
 import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,7 +13,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class PaypalApiCreateOrder extends Response {
@@ -22,12 +20,12 @@ public class PaypalApiCreateOrder extends Response {
     private final static String URL = "https://api-m.paypal.com/v2/checkout/orders";
     private final static String SANDBOX_URL = "https://api-m.sandbox.paypal.com/v2/checkout/orders";
 
-    @Getter private final PaypalOrder order;
+    @Getter private final PaypalOrderSchema order;
 
-    PaypalApiCreateOrder(double amount, String returnUrl, String accessToken, boolean sandbox) throws IOException, InterruptedException {
+    PaypalApiCreateOrder(double amount, String returnUrl, String accessToken, String currencyCode, boolean sandbox) throws IOException, InterruptedException {
 
         HashMap<String, String> amountMap = new HashMap<>();
-        amountMap.put("currency_code", "PLN");
+        amountMap.put("currency_code", currencyCode);
         amountMap.put("value", String.format(Locale.ROOT, "%.2f", amount));
 
         JSONObject amountObject = new JSONObject();
@@ -56,7 +54,7 @@ public class PaypalApiCreateOrder extends Response {
 
         JSONObject jsonObject = new JSONObject(httpResponse.body());
 
-        PaypalOrder orderSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaypalOrder.class);
+        PaypalOrderSchema orderSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaypalOrderSchema.class);
 
         this.setStatusCode(httpResponse.statusCode());
         this.setHeaders(httpResponse.headers());

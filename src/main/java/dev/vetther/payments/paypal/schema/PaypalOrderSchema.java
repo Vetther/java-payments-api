@@ -1,12 +1,12 @@
 package dev.vetther.payments.paypal.schema;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.ArrayList;
 
-@AllArgsConstructor
-public class PaypalOrder {
+public class PaypalOrderSchema {
 
     @Getter private final String create_time;
     @Getter private final String id;
@@ -25,14 +25,25 @@ public class PaypalOrder {
         return status.equalsIgnoreCase("APPROVED") || status.equalsIgnoreCase("COMPLETED");
     }
 
-    @AllArgsConstructor
+    private PaypalOrderSchema(String create_time, String id, String intent, Payer payer, String processing_instruction, String status, String update_time, ArrayList<LinkDescription> links) {
+        this.create_time = create_time;
+        this.id = id;
+        this.intent = intent;
+        this.payer = payer;
+        this.processing_instruction = processing_instruction;
+        this.status = status;
+        this.update_time = update_time;
+        this.links = links;
+    }
+
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class LinkDescription {
         @Getter private final String href;
         @Getter private final String rel;
         @Getter private final String method;
     }
 
-    @AllArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Payer {
         @Getter private final String email_address;
         @Getter private final String payer_id;
@@ -40,7 +51,7 @@ public class PaypalOrder {
         @Getter private final PayerName name;
     }
 
-    @AllArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PayerName {
         @Getter private final String full_name;
         @Getter private final String given_name;

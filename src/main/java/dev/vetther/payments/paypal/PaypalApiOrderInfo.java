@@ -2,11 +2,8 @@ package dev.vetther.payments.paypal;
 
 import com.google.gson.GsonBuilder;
 import dev.vetther.payments.Response;
-import dev.vetther.payments.paypal.schema.PaypalAccessToken;
-import dev.vetther.payments.paypal.schema.PaypalOrder;
-import dev.vetther.payments.util.FormUtils;
+import dev.vetther.payments.paypal.schema.PaypalOrderSchema;
 import lombok.Getter;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -20,7 +17,7 @@ public class PaypalApiOrderInfo extends Response {
     private final static String URL = "https://api-m.paypal.com/v2/checkout/orders/:ID";
     private final static String SANDBOX_URL = "https://api-m.sandbox.paypal.com/v2/checkout/orders/:ID";
 
-    @Getter private final PaypalOrder order;
+    @Getter private final PaypalOrderSchema order;
 
     PaypalApiOrderInfo(String orderId, String accessToken, boolean sandbox) throws IOException, InterruptedException {
 
@@ -37,7 +34,7 @@ public class PaypalApiOrderInfo extends Response {
 
         JSONObject jsonObject = new JSONObject(httpResponse.body());
 
-        PaypalOrder orderSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaypalOrder.class);
+        PaypalOrderSchema orderSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaypalOrderSchema.class);
 
         this.setStatusCode(httpResponse.statusCode());
         this.setHeaders(httpResponse.headers());

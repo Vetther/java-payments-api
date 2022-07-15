@@ -2,10 +2,8 @@ package dev.vetther.payments.paypal;
 
 import com.google.gson.GsonBuilder;
 import dev.vetther.payments.Response;
-import dev.vetther.payments.paypal.schema.PaypalWebhook;
-import dev.vetther.payments.paypal.schema.PaypalWebhooks;
+import dev.vetther.payments.paypal.schema.PaypalWebhooksSchema;
 import lombok.Getter;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -19,7 +17,7 @@ public class PaypalApiWebhookList extends Response {
     private final static String URL = "https://api-m.paypal.com/v1/notifications/webhooks";
     private final static String SANDBOX_URL = "https://api-m.sandbox.paypal.com/v1/notifications/webhooks";
 
-    @Getter private final PaypalWebhooks webhooks;
+    @Getter private final PaypalWebhooksSchema webhooks;
 
     PaypalApiWebhookList(String accessToken, boolean sandbox) throws IOException, InterruptedException {
 
@@ -34,7 +32,7 @@ public class PaypalApiWebhookList extends Response {
 
         JSONObject jsonObject = new JSONObject(httpResponse.body());
 
-        PaypalWebhooks webhooksSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaypalWebhooks.class);
+        PaypalWebhooksSchema webhooksSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaypalWebhooksSchema.class);
 
         this.setStatusCode(httpResponse.statusCode());
         this.setHeaders(httpResponse.headers());

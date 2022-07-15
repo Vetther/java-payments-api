@@ -4,6 +4,9 @@ import dev.vetther.payments.util.PaypalUtils;
 
 import java.io.IOException;
 
+/**
+ * <b>API for PayPal REST API version v2</b>
+ */
 public class PaypalApi {
 
     private final String clientId;
@@ -55,10 +58,11 @@ public class PaypalApi {
      * @param amount order costs
      * @param redirectUrl URL which will be used to redirect user after order, leave empty to disable
      * @param webhookUrl URL which will receive POST request when order is paid, leave empty to disable
+     * @param currency Currency for order, example: PLN, USD
      * @throws IOException if an I/O error occurs when sending or receiving http request
      * @throws InterruptedException if the operation is interrupted
      */
-    public PaypalApiCreateOrder createOrder(double amount, String redirectUrl, String webhookUrl) throws IOException, InterruptedException {
+    public PaypalApiCreateOrder createOrder(double amount, String currency, String redirectUrl, String webhookUrl) throws IOException, InterruptedException {
         this.accessToken = createToken().getToken().getAccess_token();
 
         if (webhookUrl != null && !PaypalUtils.isWebhookCreated(this, webhookUrl, "CHECKOUT.ORDER.APPROVED", "CHECKOUT.ORDER.COMPLETED")) {
@@ -66,7 +70,7 @@ public class PaypalApi {
             createWebhook(webhookUrl, "CHECKOUT.ORDER.APPROVED", "CHECKOUT.ORDER.COMPLETED");
         }
 
-        return new PaypalApiCreateOrder(amount, redirectUrl, this.accessToken, this.sandbox);
+        return new PaypalApiCreateOrder(amount, redirectUrl, this.accessToken, currency, this.sandbox);
     }
 
     /**
