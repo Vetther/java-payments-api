@@ -1,8 +1,13 @@
 package dev.vetther.payments.paypal;
 
+import dev.vetther.payments.paypal.schema.PaypalAccessTokenSchema;
 import dev.vetther.payments.util.PaypalUtils;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <b>API for PayPal REST API version v2</b>
@@ -13,12 +18,27 @@ public class PaypalApi {
     private final String clientSecret;
     private final boolean sandbox;
     private String accessToken;
+    private Instant accessTokenLife;
 
     public PaypalApi(String clientId, String clientSecret, boolean sandbox) throws IOException, InterruptedException {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.sandbox = sandbox;
-        this.accessToken = createToken().getToken().getAccess_token();
+
+        PaypalAccessTokenSchema token = createToken().getToken();
+        this.accessToken = token.getAccess_token();
+        this.accessTokenLife = Instant.now().plusSeconds(token.getExpires_in());
+    }
+
+    private String getAccessToken() throws IOException, InterruptedException {
+
+        if (Instant.now().isAfter(this.accessTokenLife)) {
+            PaypalApiCreateToken token = createToken();
+            this.accessTokenLife = Instant.now().plusSeconds(token.getToken().getExpires_in());
+            this.accessToken = token.getToken().getAccess_token();
+        }
+
+        return accessToken;
     }
 
     /**
@@ -38,7 +58,7 @@ public class PaypalApi {
      * @throws InterruptedException if the operation is interrupted
      */
     private PaypalApiCreateWebhook createWebhook(String url, String... eventType) throws IOException, InterruptedException {
-        this.accessToken = createToken().getToken().getAccess_token();
+        this.accessToken = getAccessToken();
         return new PaypalApiCreateWebhook(url, this.accessToken, this.sandbox, eventType);
     }
 
@@ -48,14 +68,14 @@ public class PaypalApi {
      * @throws InterruptedException if the operation is interrupted
      */
     public PaypalApiWebhookList getWebhooks() throws IOException, InterruptedException {
-        this.accessToken = createToken().getToken().getAccess_token();
+        this.accessToken = getAccessToken();
         return new PaypalApiWebhookList(this.accessToken, this.sandbox);
     }
 
     /**
      * Creates an order for sandbox/real account<br>
      * Additionally creates webhook if not exists with event triggering on webhookUrl (POST) when order is paid
-     * @param amount order costs
+     * @param amount Order costs
      * @param redirectUrl URL which will be used to redirect user after order, leave empty to disable
      * @param webhookUrl URL which will receive POST request when order is paid, leave empty to disable
      * @param currency Currency for order, example: PLN, USD
@@ -63,7 +83,7 @@ public class PaypalApi {
      * @throws InterruptedException if the operation is interrupted
      */
     public PaypalApiCreateOrder createOrder(double amount, String currency, String redirectUrl, String webhookUrl) throws IOException, InterruptedException {
-        this.accessToken = createToken().getToken().getAccess_token();
+        this.accessToken = getAccessToken();
 
         if (webhookUrl != null && !PaypalUtils.isWebhookCreated(this, webhookUrl, "CHECKOUT.ORDER.APPROVED", "CHECKOUT.ORDER.COMPLETED")) {
             System.out.println("---> NIE ZNALEZIONO WEBHOOKA, TWORZENIE NOWEGO...");
@@ -80,7 +100,7 @@ public class PaypalApi {
      * @throws InterruptedException if the operation is interrupted
      */
     public PaypalApiOrderInfo getOrderInfo(String orderId) throws IOException, InterruptedException {
-        this.accessToken = createToken().getToken().getAccess_token();
+        this.accessToken = getAccessToken();
         return new PaypalApiOrderInfo(orderId, this.accessToken, this.sandbox);
     }
 }
