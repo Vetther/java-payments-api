@@ -27,18 +27,7 @@ public class PaybylinkCreatePayment extends Response {
 
         String amountStr = String.format(Locale.ROOT, "%.2f", amount);
 
-        /*List<String> arguments = new ArrayList<>();
-        arguments.add(String.valueOf(shopId));
-        arguments.add(amountStr);
-        if (control != null)        arguments.add(control);
-        if (description != null)    arguments.add(description);
-        if (email != null)          arguments.add(email);
-        if (webhookUrl != null)     arguments.add(webhookUrl);
-        if (redirectUrl != null)    arguments.add(redirectUrl);
-        if (hideReceiver)           arguments.add(String.valueOf(true));
-         */
-
-        String signature = SignatureUtils.generateSignature(shopHashMode, shopId, amountStr, control, description, email, webhookUrl, redirectUrl, hideReceiver);
+        String signature = SignatureUtils.generateSignature(shopHashMode, "|", shopId, amountStr, control, description, email, webhookUrl, redirectUrl, hideReceiver);
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("shopId", shopId);

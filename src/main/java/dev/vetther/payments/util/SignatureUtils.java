@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SignatureUtils {
 
-    public static String generateSignature(PaymentHash paymentHash, Object... arguments) {
+    public static String generateSignature(PaymentHash paymentHash, String delimiter, Object... arguments) {
 
         List<String> toSignature = new ArrayList<>();
 
@@ -17,7 +17,7 @@ public class SignatureUtils {
         }
 
         return (paymentHash == PaymentHash.SHA256)
-                ? DigestUtils.sha256Hex(String.join("|", toSignature))
-                : DigestUtils.md5Hex(String.join("|", toSignature));
+                ? DigestUtils.sha256Hex(String.join(delimiter, toSignature))
+                : DigestUtils.md5Hex(String.join(delimiter, toSignature));
     }
 }
