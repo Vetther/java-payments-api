@@ -19,11 +19,11 @@ maven { url "https://repo.eternalcode.pl/releases" }
 <dependency>
   <groupId>dev.vetther</groupId>
   <artifactId>java-payments-api</artifactId>
-  <version>1.0.7</version>
+  <version>1.0.8</version>
 </dependency>
 ```
 ```groovy
-implementation "dev.vetther:java-payments-api:1.0.7"
+implementation "dev.vetther:java-payments-api:1.0.8"
 ```
 
 ### Example Usage

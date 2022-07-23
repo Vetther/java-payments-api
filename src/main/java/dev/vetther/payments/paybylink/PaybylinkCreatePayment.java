@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import dev.vetther.payments.PaymentHash;
 import dev.vetther.payments.Response;
 import dev.vetther.payments.lvlup.schema.LvlupPaymentSchema;
+import dev.vetther.payments.paybylink.schema.PaybylinkPaymentCreateSchema;
 import dev.vetther.payments.paybylink.schema.PaybylinkPaymentSchema;
 import dev.vetther.payments.util.SignatureUtils;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import java.util.Locale;
 
 public class PaybylinkCreatePayment extends Response {
 
-    @Getter private final PaybylinkPaymentSchema payment;
+    @Getter private final PaybylinkPaymentCreateSchema payment;
 
     PaybylinkCreatePayment(int shopId, PaymentHash shopHashMode, float amount, String control, String description, String email, String webhookUrl, String redirectUrl, boolean hideReceiver) throws IOException, InterruptedException {
 
@@ -49,7 +50,7 @@ public class PaybylinkCreatePayment extends Response {
 
         JSONObject jsonObject = new JSONObject(httpResponse.body());
 
-        PaybylinkPaymentSchema paymentSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaybylinkPaymentSchema.class);
+        PaybylinkPaymentCreateSchema paymentSchema = new GsonBuilder().create().fromJson(jsonObject.toString(), PaybylinkPaymentCreateSchema.class);
 
         this.setStatusCode(httpResponse.statusCode());
         this.setHeaders(httpResponse.headers());
